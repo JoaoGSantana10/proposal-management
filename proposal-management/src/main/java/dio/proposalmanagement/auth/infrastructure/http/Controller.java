@@ -1,5 +1,6 @@
 package dio.proposalmanagement.auth.infrastructure.http;
 
+import dio.proposalmanagement.auth.infrastructure.persistense.entity.User;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,8 +19,8 @@ public class Controller {
      * O Spring disponibiliza uma anotação chamada @AuthenticationPrincipal que vai pegar o usuário autenticado e
      * injetar ele no parâmetro do método.
      */
-    public String hello(@AuthenticationPrincipal UserDetails user){
-        return "Hello World " + user.getUsername();
+    public String hello(@AuthenticationPrincipal User user){
+        return "Hello World " + user.getId();
     }
 
     @GetMapping("/influencer")
