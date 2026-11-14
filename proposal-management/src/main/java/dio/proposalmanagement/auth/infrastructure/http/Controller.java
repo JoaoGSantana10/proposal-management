@@ -12,12 +12,21 @@ import java.net.Authenticator;
 
 @RestController
 @RequestMapping
+/**
+ * Endpoints simples usados para demonstrar autenticação e autorização por role.
+ */
 public class Controller {
 
     @GetMapping
     /**
      * O Spring disponibiliza uma anotação chamada @AuthenticationPrincipal que vai pegar o usuário autenticado e
      * injetar ele no parâmetro do método.
+     */
+    /**
+     * Retorna uma saudação contendo o UUID do usuário autenticado.
+     *
+     * @param user principal injetado pelo Spring Security
+     * @return mensagem de saudação
      */
     public String hello(@AuthenticationPrincipal User user){
         return "Hello World " + user.getId();
@@ -26,12 +35,22 @@ public class Controller {
     @GetMapping("/influencer")
     // Eu posso falar que o usuário atenticado precisa ter uma role específica para acessar esse endpoint.
     @PreAuthorize("hasRole('INFLUENCER')")
+    /**
+     * Endpoint acessível somente a influenciadores.
+     *
+     * @return mensagem de confirmação da role
+     */
     public String influencerEndpoint(){
         return "Hello INFLUENCER";
     }
 
     @GetMapping("/brand")
     @PreAuthorize("hasRole('BRAND')")
+    /**
+     * Endpoint acessível somente a marcas.
+     *
+     * @return mensagem de confirmação da role
+     */
     public String brandEndpoint(){
         return "Hello BRAND";
     }

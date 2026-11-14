@@ -13,11 +13,20 @@ import tools.jackson.databind.ObjectMapper;
 import java.io.IOException;
 
 @Component
+/**
+ * Filtro que recebe credenciais em JSON e inicia a autenticação REST.
+ */
 public class RestUsernamePasswordAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     // transforma o JSON em objeto Java, faz serialização e desserialização de objetos Java para JSON e vice-versa.
     private final ObjectMapper objectMapper;
 
+    /**
+     * Obtém o gerenciador de autenticação configurado pelo Spring e o serializador JSON.
+     *
+     * @param authenticationConfiguration configuração que fornece o AuthenticationManager
+     * @param objectMapper conversor do corpo JSON
+     */
     public RestUsernamePasswordAuthenticationFilter(AuthenticationConfiguration authenticationConfiguration,
                                                     ObjectMapper objectMapper) {
         /**
@@ -33,6 +42,14 @@ public class RestUsernamePasswordAuthenticationFilter extends UsernamePasswordAu
     }
 
     @Override
+    /**
+     * Lê as credenciais, cria o token Spring Security e delega a validação.
+     *
+     * @param request requisição contendo username e password em JSON
+     * @param response resposta HTTP
+     * @return resultado da autenticação
+     * @throws AuthenticationException quando as credenciais são rejeitadas
+     */
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         // Aqui você pode adicionar lógica personalizada para a autenticação
         // Por exemplo, você pode verificar se o usuário está bloqueado, se a senha está correta, etc.
@@ -59,6 +76,12 @@ public class RestUsernamePasswordAuthenticationFilter extends UsernamePasswordAu
         }
     }
 
+    /**
+     * Estrutura JSON esperada pelo endpoint de login.
+     *
+     * @param username nome do usuário
+     * @param password senha em texto recebida para autenticação
+     */
     public record LoginRequest(String username, String password) {
 
     }

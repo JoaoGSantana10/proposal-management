@@ -1,166 +1,119 @@
-# proposal-management
+# Proposal Management
 
- <div align="center">
+Aplicação REST para autenticação de usuários e gerenciamento de propostas entre influenciadores e marcas. O projeto usa Java 25, Spring Boot, Spring Security, Spring Data JPA e MySQL.
 
-# 🤝 Influencer & Brand Connect
+## Funcionalidades atuais
 
-### Gerenciamento de propostas com segurança baseada em papéis (RBAC)
+- autenticação por usuário e senha em `POST /api/auth/login`;
+- usuários com as roles `INFLUENCER` e `BRAND`;
+- criação de propostas por influenciadores;
+- listagem das próprias propostas para influenciadores;
+- listagem de todas as propostas para marcas;
+- persistência de usuários e propostas em MySQL;
+- criação inicial de três usuários de desenvolvimento quando a tabela de usuários está vazia.
 
-![Java](https://img.shields.io/badge/Java-21-orange?style=for-the-badge&logo=openjdk&logoColor=white)
-![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.x-6DB33F?style=for-the-badge&logo=springboot&logoColor=white)
-![Spring Security](https://img.shields.io/badge/Spring_Security-6.x-6DB33F?style=for-the-badge&logo=springsecurity&logoColor=white)
-![Status](https://img.shields.io/badge/status-em_desenvolvimento-yellow?style=for-the-badge)
+## Tecnologias e requisitos
 
-</div>
+- Java 25;
+- Gradle Wrapper (`./gradlew`);
+- Docker e Docker Compose, para o MySQL local;
+- Spring Boot 4.1.2;
+- MySQL 9.6.
 
----
+## Executando localmente
 
-## 📖 Sobre o projeto
-
-Uma **plataforma de Media Kits** onde influenciadores digitais expõem propostas e marcas realizam contratações diretas, tudo em um ambiente centralizado.
-
-O grande desafio deste estudo de caso é **segurança**: garantir que cada perfil acesse **apenas as funcionalidades que lhe pertencem**, evitando acesso indevido a dados de terceiros. Para isso, o projeto evolui de uma API totalmente pública para um modelo **protegido por identidades digitais**, usando **Spring Security**.
-
-## 🎯 Regras de negócio
-
-- 👤 Existem dois tipos de usuário: **Influenciador** e **Marca (Brand)**.
-- 📢 O **Influenciador** pode **criar propostas** na plataforma.
-- 🏢 A **Marca** pode **visualizar todas as propostas** disponíveis no sistema, mas **não pode criar** propostas.
-- 🔒 O Influenciador **só enxerga as próprias propostas**, nunca as de outros influenciadores.
-
-## 🔐 Modelo de segurança (RBAC)
-
-O acesso é controlado por **papéis (Role-Based Access Control)**:
-
-| Ação                          | 🎤 Influenciador | 🏷️ Marca |
-| ----------------------------- | :--------------: | :------: |
-| Criar proposta (`POST`)       |        ✅        |    ❌    |
-| Ver propostas públicas        |        ❌        |    ✅    |
-| Ver as próprias propostas     |        ✅        |   N/A    |
-
-### Perfis
-
-- **Influencer** – pode postar propostas de mídia, mas é restrito de visualizar propostas de outros influenciadores.
-- **Brand** – possui permissão para visualizar propostas públicas, porém não pode criar conteúdo como influenciador.
-
-### Domínio e imutabilidade
-
-- **UUIDs** como identificadores, garantindo integridade e rastreabilidade dos contratos gerados.
-- **Java Records** para DTOs e objetos imutáveis.
-
-## 🛠️ Tecnologias
-
-- **Java** 21 *(ajuste para a sua versão)*
-- **Spring Boot**
-- **Spring Security**
-- **Spring Web**
-- **Spring Data JPA**
-- **Banco de dados:** `<PostgreSQL | MySQL | H2>`
-- **Gradle** *(ou Maven)*
-
-## 🏗️ Estrutura do projeto
-
-```text
-src/main/java/com/seuprojeto
-├── config/          # Configuração do Spring Security (SecurityFilterChain)
-├── controller/      # Endpoints REST
-├── dto/             # Java Records (requests/responses)
-├── model/           # Entidades (User, Proposal, Role)
-├── repository/      # Repositórios Spring Data
-└── service/         # Regras de negócio
-```
-
-> 💡 Ajuste os pacotes conforme a estrutura real do seu projeto.
-
-## 🔌 Endpoints
-
-| Método | Rota                  | Descrição                          | Acesso        |
-| :----: | --------------------- | ---------------------------------- | ------------- |
-| `POST` | `/auth/register`      | Cadastra um novo usuário           | Público       |
-| `POST` | `/auth/login`         | Autentica o usuário                | Público       |
-| `POST` | `/proposals`          | Cria uma proposta                  | `INFLUENCER`  |
-| `GET`  | `/proposals`          | Lista as propostas públicas        | `BRAND`       |
-| `GET`  | `/proposals/me`       | Lista as próprias propostas        | `INFLUENCER`  |
-
-> 💡 Substitua pelas rotas reais da sua API.
-
-### Exemplo de requisição
-
-```http
-POST /proposals
-Authorization: Bearer <seu_token>
-Content-Type: application/json
-
-{
-  "title": "Campanha de verão",
-  "description": "Pacote de 3 vídeos curtos + stories",
-  "price": 1500.00
-}
-```
-
-## 🚀 Como executar
-
-### Pré-requisitos
-
-- JDK 21+
-- Git
-- Banco de dados configurado
-
-### Passo a passo
+Entre na pasta da aplicação, suba o banco e inicie o projeto:
 
 ```bash
-# 1. Clone o repositório
-git clone https://github.com/JoaoGSantana10/<nome-do-repositorio>.git
-
-# 2. Entre na pasta
-cd <nome-do-repositorio>
-
-# 3. Configure o application.properties (ou application.yml)
-
-# 4. Execute a aplicação
+cd proposal-management
+docker compose up -d
 ./gradlew bootRun
 ```
 
-A API ficará disponível em `http://localhost:8080`.
-
-## ⚙️ Configuração
-
-Exemplo de `application.properties`:
-
-```properties
-spring.datasource.url=jdbc:postgresql://localhost:5432/seu_banco
-spring.datasource.username=seu_usuario
-spring.datasource.password=sua_senha
-spring.jpa.hibernate.ddl-auto=update
-```
-
-## 🧪 Testes
+Para executar os testes:
 
 ```bash
 ./gradlew test
 ```
 
-## 🗺️ Roadmap
+O Compose publica o MySQL na porta `3307` do host e usa o banco `proposals`, usuário `app` e senha `app`. A aplicação usa `spring.jpa.hibernate.ddl-auto=create`, portanto o schema é recriado ao iniciar conforme a configuração atual.
 
-- [x] Modelagem de usuários e papéis
-- [x] Controle de acesso por papéis (RBAC)
-- [ ] Autenticação com JWT
-- [ ] Contratação direta de propostas
-- [ ] Testes de integração para as regras de acesso
-- [ ] Documentação com Swagger/OpenAPI
+## Usuários de desenvolvimento
 
-## 👨‍💻 Autor
+Quando não existem usuários, a aplicação cria:
 
-**João Guilherme Santana de Oliveira**
-Estudante de Engenharia de Software na UnB (FGA)
+| Usuário | Senha | Role |
+|---|---|---|
+| `fitness_vibe` | `password` | `INFLUENCER` |
+| `tech_guru` | `password` | `INFLUENCER` |
+| `logistics` | `password` | `BRAND` |
 
-[![GitHub](https://img.shields.io/badge/GitHub-JoaoGSantana10-181717?style=flat&logo=github)](https://github.com/JoaoGSantana10)
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-João_Guilherme-0A66C2?style=flat&logo=linkedin)](https://linkedin.com/in/joão-guilherme-santana-de-oliveira-a73472416)
+Essas credenciais são apenas para desenvolvimento e não devem ser usadas em produção.
 
----
+## API
 
-<div align="center">
+### Login
 
-Feito com ☕ e Spring Security
+`POST /api/auth/login`
 
-</div>
+```json
+{
+  "username": "fitness_vibe",
+  "password": "password"
+}
+```
+
+O filtro REST lê o JSON, autentica com o `UserDetailsService` baseado em JPA e retorna HTTP 200 quando a autenticação é bem-sucedida. A aplicação mantém a autenticação no contexto de segurança conforme a configuração atual.
+
+### Criar proposta
+
+`POST /proposals`
+
+Requer a role `INFLUENCER`.
+
+```json
+{
+  "title": "Campanha de verão",
+  "description": "Divulgação de produto nas redes sociais"
+}
+```
+
+O usuário autenticado é usado como proprietário da proposta. A resposta contém o identificador, título, descrição e dados do proprietário.
+
+### Listar propostas
+
+`GET /proposals`
+
+Requer `INFLUENCER` ou `BRAND`. O escopo é definido pela role:
+
+- `INFLUENCER`: retorna somente propostas do usuário autenticado;
+- `BRAND`: retorna todas as propostas.
+
+## Organização do código
+
+```text
+proposal-management/
+├── src/main/java/dio/proposalmanagement
+│   ├── auth
+│   │   ├── domain
+│   │   └── infrastructure
+│   └── proposal
+│       ├── application
+│       ├── domain
+│       └── infrasctructure
+├── compose.yml
+├── build.gradle
+└── DOCUMENTATION.md
+```
+
+`auth` concentra usuários, roles e segurança. `proposal` separa domínio, casos de uso e adaptadores HTTP/persistência. A explicação completa de cada pacote, classe e fluxo está em [`proposal-management/DOCUMENTATION.md`](proposal-management/DOCUMENTATION.md).
+
+## Configuração e limitações atuais
+
+- `application.properties` habilita a exibição de SQL e recria as tabelas ao iniciar;
+- as credenciais do banco estão declaradas no `compose.yml` para ambiente local;
+- não há ainda migrações de banco, tratamento de erros HTTP específico ou documentação OpenAPI;
+- o endpoint de login não retorna token; ele usa o mecanismo de autenticação/sessão configurado pelo Spring Security;
+- os nomes dos pacotes `infrasctructure` e `persistense` mantêm a grafia existente no código.
+
+Consulte [`DOCUMENTATION.md`](proposal-management/DOCUMENTATION.md) para detalhes de arquitetura e implementação.

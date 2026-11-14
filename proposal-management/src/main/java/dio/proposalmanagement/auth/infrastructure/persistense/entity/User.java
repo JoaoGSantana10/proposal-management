@@ -18,6 +18,12 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor // cria um construtor sem argumentos.
 @AllArgsConstructor // cria um construtor com todos os argumentos.
+/**
+ * Entidade de usuário persistida e principal de autenticação do Spring Security.
+ *
+ * <p>Além de mapear a tabela de usuários, a classe implementa {@link UserDetails}
+ * para que o mesmo objeto seja usado durante a autenticação.</p>
+ */
 public class User implements UserDetails {
     @Id // adiciona a anotação de id, que é a chave primária da tabela.
     @GeneratedValue(strategy = GenerationType.UUID) // gera um id único para cada usuário.
@@ -33,6 +39,11 @@ public class User implements UserDetails {
     private UserRole role;
 
     @Override
+    /**
+     * Converte a role persistida na authority consumida pelo Spring Security.
+     *
+     * @return coleção contendo a authority da role do usuário
+     */
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));
     }

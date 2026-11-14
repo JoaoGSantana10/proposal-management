@@ -28,10 +28,21 @@ import java.util.List;
 dependendo de alguns parâmetros que eu posso passar para essas anotações, eu consigo liberar ou não o acesso a esse
 método. */
 
+/**
+ * Configuração central do Spring Security e da carga inicial de usuários.
+ */
 public class SecurityConfig {
 
     // PEP: Todas as nossas chamadas todas as requisições HTTP vão passar por esse filtro de segurança.
     @Bean
+    /**
+     * Define a cadeia de filtros, a rota pública de login e a exigência de autenticação.
+     *
+     * @param http construtor programático da segurança HTTP
+     * @param restUsernamePasswordAuthenticationFilter filtro REST de login
+     * @return cadeia de filtros construída
+     * @throws Exception quando o Spring não consegue construir a cadeia
+     */
     SecurityFilterChain securityFilterChain(HttpSecurity http,
                                             RestUsernamePasswordAuthenticationFilter restUsernamePasswordAuthenticationFilter) throws Exception{
         /**
@@ -78,6 +89,11 @@ public class SecurityConfig {
      */
 
     @Bean
+    /**
+     * Cria o encoder usado para armazenar e comparar senhas.
+     *
+     * @return encoder BCrypt
+     */
     PasswordEncoder passwordEncoder(){
         // Define o algoritmo de criptografia que vai ser utilizado para criptografar a senha.
         return new BCryptPasswordEncoder();
@@ -85,6 +101,13 @@ public class SecurityConfig {
 
     // Quando a aplicação iniciar, vai verificar se o banco de dados está vazio, se estiver vazio ele vai criar os usuários.
     @Bean
+    /**
+     * Insere usuários de desenvolvimento apenas quando o repositório está vazio.
+     *
+     * @param repository repositório de usuários
+     * @param passwordEncoder encoder para nunca persistir a senha em texto puro
+     * @return rotina executada na inicialização do contexto
+     */
     CommandLineRunner initDatabase(UserRepository repository, PasswordEncoder passwordEncoder){
         return args -> {
             if (repository.count() == 0) {
