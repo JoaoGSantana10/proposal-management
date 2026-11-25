@@ -22,10 +22,9 @@ Aplicação REST para autenticação de usuários e gerenciamento de propostas e
 
 ## Executando localmente
 
-Entre na pasta da aplicação, suba o banco e inicie o projeto:
+Na raiz do repositório, suba o banco e inicie o projeto:
 
 ```bash
-cd proposal-management
 docker compose up -d
 ./gradlew bootRun
 ```
@@ -92,21 +91,20 @@ Requer `INFLUENCER` ou `BRAND`. O escopo é definido pela role:
 ## Organização do código
 
 ```text
-proposal-management/
-├── src/main/java/dio/proposalmanagement
-│   ├── auth
-│   │   ├── domain
-│   │   └── infrastructure
-│   └── proposal
-│       ├── application
-│       ├── domain
-│       └── infrasctructure
-├── compose.yml
-├── build.gradle
-└── DOCUMENTATION.md
+src/main/java/dio/proposalmanagement
+├── auth
+│   ├── domain
+│   └── infrastructure
+└── proposal
+    ├── application
+    ├── domain
+    └── infrasctructure
+compose.yml
+build.gradle
+DOCUMENTATION.md
 ```
 
-`auth` concentra usuários, roles e segurança. `proposal` separa domínio, casos de uso e adaptadores HTTP/persistência. A explicação completa de cada pacote, classe e fluxo está em [`proposal-management/DOCUMENTATION.md`](proposal-management/DOCUMENTATION.md).
+`auth` concentra usuários, roles e segurança. `proposal` separa domínio, casos de uso e adaptadores HTTP/persistência. A explicação completa de cada pacote, classe e fluxo está em [`DOCUMENTATION.md`](DOCUMENTATION.md).
 
 ## Configuração e limitações atuais
 
@@ -116,4 +114,4 @@ proposal-management/
 - o endpoint de login não retorna token; ele usa o mecanismo de autenticação/sessão configurado pelo Spring Security;
 - os nomes dos pacotes `infrasctructure` e `persistense` mantêm a grafia existente no código.
 
-Consulte [`DOCUMENTATION.md`](proposal-management/DOCUMENTATION.md) para detalhes de arquitetura e implementação.
+Consulte [`DOCUMENTATION.md`](DOCUMENTATION.md) para detalhes de arquitetura e implementação.
