@@ -104,7 +104,7 @@ build.gradle
 DOCUMENTATION.md
 ```
 
-`auth` concentra usuários, roles e segurança. `proposal` separa domínio, casos de uso e adaptadores HTTP/persistência. A explicação completa de cada pacote, classe e fluxo está em [`DOCUMENTATION.md`](DOCUMENTATION.md).
+`auth` concentra usuários, roles e segurança. `proposal` separa domínio, casos de uso e adaptadores HTTP/persistência. A documentação detalhada de cada pacote, classe, anotação e fluxo está em [`docs/README.md`](docs/README.md). O resumo anterior permanece em [`DOCUMENTATION.md`](DOCUMENTATION.md).
 
 ## Configuração e limitações atuais
 
@@ -114,4 +114,4 @@ DOCUMENTATION.md
 - o endpoint de login não retorna token; ele usa o mecanismo de autenticação/sessão configurado pelo Spring Security;
 - os nomes dos pacotes `infrasctructure` e `persistense` mantêm a grafia existente no código.
 
-Consulte [`DOCUMENTATION.md`](DOCUMENTATION.md) para detalhes de arquitetura e implementação.
+Consulte [`docs/README.md`](docs/README.md) para detalhes de arquitetura e implementação.
